@@ -1,8 +1,8 @@
 from pprint import pformat
 from facepp import API, File
 
-API_KEY = 'poPgUNqKIy9frrxoPm-KflKBxClMmoDZ'
-API_SECRET = 'D2vX9Lh8wYiuPhtrr2yPoYIk9iOCRePR'
+API_KEY = ''
+API_SECRET = ''
 
 def print_result(hit, result):
     def encode(obj):

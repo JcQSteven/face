@@ -7,8 +7,6 @@ import ConfigParser
 config=ConfigParser.ConfigParser()
 config.read('conf.ini')
 
-API_KEY = "pwUJ0PD7KRjpZFcuSgAnjrcCn4UjkaDJ"
-API_SECRET = "HNIg5_gSLenRZN7JNxT_1MzFsUg6iltH"
 
 api = API(config.get('API','API_KEY'), config.get('API','API_SECRET'))
 
