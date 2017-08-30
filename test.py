@@ -2,13 +2,35 @@
 
 import facetool
 import os
+import camera
+import threading
+import time
 
+photo = []
 confidence = facetool.get_confidence()
 person = facetool.get_person().split(',')
 
 
-def file_exit(file_path):
-    if os.path.exits(file_path):
+def file_check(photo):
+    while 1:
+        if len(photo):
+            if len(photo)==1:
+                file_path = photo.pop()
+                check_result = facetool.search_faceset(file_path.rstrip(), person_choice)['results'][0]['confidence']
+                print 'check_result', check_result
+
+                if float(check_result) >= float(confidence):
+                    print'[+]Highly !'
+                else:
+                    print'[-]Not the same one !'
+
+                print 'thread:', file_path
+            if len(photo)==2:
+                break
+
+
+def file_exsit(file_path):
+    if os.path.exsits(file_path):
         return 1
     else:
         return 0
@@ -19,7 +41,7 @@ menu = '''
 0.Set person
 1.Add face to storage
 2.Face check
-3.
+3.Camera
 4.
 5.Get all storage
 6.Delete storage
@@ -38,6 +60,7 @@ if __name__ == "__main__":
                     print '%s.%s' % (i, person[i])
                 person_choice = raw_input('Input your person number:')
                 person_choice = person[int(person_choice)]
+                print '[!]You are using %s'%person_choice
 
             if case == '1':
                 file_path = raw_input('Enter you file path:')
@@ -45,6 +68,7 @@ if __name__ == "__main__":
                 print 'face_token', face_token
                 facetool.add_faceset(person_choice, face_token)
                 print'[+]Add Successfully!\n'
+
             elif case == '2':
                 file_path = raw_input('Enter you file path:')
                 check_result = facetool.search_faceset(file_path.rstrip(), person_choice)['results'][0][
@@ -54,16 +78,24 @@ if __name__ == "__main__":
                     print'[+]Highly !'
                 else:
                     print'[-]Not the same one !'
+
             elif case == '3':
-                pass
+                t = threading.Thread(target=file_check, args=(photo,))
+                t.setDaemon(True)
+                t.start()
+                camera.camera(photo)
+
             elif case == '4':
                 pass
+
             elif case == '5':
                 facetool.print_result('Message', facetool.get_faceset())
                 pass
+
             elif case == '6':
                 id = raw_input('Input your id:')
                 facetool.delete_faceset(id.rstrip())
+
             elif case == '7':
                 id = raw_input('Input your id:')
                 facetool.create_faceset(id)
